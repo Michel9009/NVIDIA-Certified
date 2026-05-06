@@ -178,6 +178,177 @@ const conceptLessons = {
   }
 };
 
+const deepKnowledge = {
+  ml: {
+    title: "监督学习、无监督学习与机器学习任务判断",
+    overview: "这一章要解决的不是背定义，而是让你看到一个业务问题时，能判断它属于什么机器学习范式、需要什么数据、适合什么模型输出、应该如何评估。NCA-GENL 会把这些概念放进 LLM 应用、数据分析或实验场景中考。",
+    sections: [
+      {
+        heading: "1. 机器学习到底在学什么",
+        paragraphs: [
+          "机器学习模型学习的是数据中的统计规律。你给模型输入特征，例如温度、转速、振动、里程、维修历史；模型输出预测，例如是否故障、故障类型、剩余寿命或异常分组。",
+          "传统软件靠人写规则，例如“温度超过阈值就报警”；机器学习靠历史样本学习规律，例如多个传感器组合出现某种模式时故障概率升高。考试常用这个差异考察你是否理解模型为什么需要数据、标签和评估。"
+        ]
+      },
+      {
+        heading: "2. 监督学习：用带标签数据学习映射关系",
+        paragraphs: [
+          "监督学习的核心是有正确答案。训练集中每条样本都有输入 X 和标签 y。模型的目标是从 X 学到 y 的规律，并在新样本上预测 y。",
+          "分类和回归都是监督学习。分类输出离散类别，例如合格/不合格、故障类型 A/B/C、风险等级高/中/低。回归输出连续数值，例如零件剩余寿命、油耗、温度、扭矩、磨损量。",
+          "监督学习的关键风险是标签质量。如果故障标签来自人工记录，而记录不完整或标准不一致，模型会学习到错误规律。考试里看到“带标签历史数据”“预测类别或数值”，通常就是监督学习。"
+        ]
+      },
+      {
+        heading: "3. 无监督学习：没有标签时发现结构",
+        paragraphs: [
+          "无监督学习没有预先给出的正确答案。模型从数据自身寻找结构，例如把相似样本分组、发现异常点、降低维度以便可视化。",
+          "聚类用于把相似样本分组，例如把车辆振动模式分成几类；异常检测用于找出与大多数样本不同的行为，例如传感器突然出现罕见模式；降维用于把高维数据压缩到更容易理解的低维空间。",
+          "无监督学习输出的分组不天然带业务含义。模型可能把样本分成 3 类，但这 3 类是否对应真实故障模式，需要工程知识和后续验证。考试常用这一点区分“发现模式”和“预测已知标签”。"
+        ]
+      },
+      {
+        heading: "4. 监督 vs 无监督：考试最爱考的对比",
+        table: [
+          ["维度", "监督学习", "无监督学习"],
+          ["数据要求", "需要标签或目标值", "不需要标签"],
+          ["典型任务", "分类、回归", "聚类、降维、异常检测"],
+          ["输出含义", "预测已定义的类别或数值", "发现潜在结构，需要解释"],
+          ["汽车例子", "预测某零件是否会故障", "发现未知振动模式分组"],
+          ["评估方式", "accuracy、F1、MAE、RMSE 等", "轮廓系数、人工解释、下游任务效果等"]
+        ]
+      },
+      {
+        heading: "5. 如何选择：看到题目先问 3 个问题",
+        bullets: [
+          "有没有标签？有标签通常优先考虑监督学习；没有标签通常考虑无监督学习或半监督思路。",
+          "输出是什么？离散类别是分类；连续数值是回归；未知分组是聚类；罕见样本是异常检测。",
+          "目标是预测还是探索？预测已知结果偏监督；探索数据结构偏无监督。"
+        ]
+      },
+      {
+        heading: "6. 高频误区",
+        bullets: [
+          "无监督学习不是不需要数据，它只是不需要标签。",
+          "分类和回归都属于监督学习，区别在输出是类别还是连续值。",
+          "聚类结果不是自动等于业务真相，需要领域专家解释。",
+          "accuracy 高不代表模型好，尤其在故障样本很少时。"
+        ]
+      }
+    ],
+    decision: "考试判断口诀：有标签预测类别/数值 -> 监督学习；无标签找结构/异常 -> 无监督学习；输出类别 -> 分类；输出连续数值 -> 回归；故障漏报代价高 -> 重点看 recall。"
+  },
+  transformer: {
+    title: "Transformer 与 Attention",
+    overview: "Transformer 是 LLM 的骨架。要掌握文本如何变成 token 和向量，以及 attention 如何让每个 token 读取上下文。",
+    sections: [
+      { heading: "核心流程", bullets: ["文本被 tokenizer 切成 token。", "token 被映射成 embedding。", "位置编码补充顺序。", "self-attention 计算 token 间关系。", "多层堆叠形成更高层语义表示。"] },
+      { heading: "Q/K/V 直觉", paragraphs: ["Query 表示当前 token 想找什么；Key 表示其他 token 能提供什么匹配线索；Value 是真正被汇总的信息。Query 和 Key 计算相似度，得到注意力权重，再用权重汇总 Value。"] },
+      { heading: "考试判断", bullets: ["问上下文关系 -> self-attention。", "问多角度捕捉关系 -> multi-head attention。", "问顺序信息 -> positional encoding。", "问预测不确定性 -> perplexity，不是事实正确性。"] }
+    ],
+    decision: "不要把 Transformer 说成只看相邻词；它的核心优势是让 token 动态关注上下文。"
+  },
+  embedding: {
+    title: "Embedding 与向量检索",
+    overview: "Embedding 把文本变成向量，让语义相似度可以计算，是 RAG 和语义搜索的基础。",
+    sections: [
+      { heading: "为什么需要 embedding", paragraphs: ["关键词搜索只能匹配表面词，embedding 可以让“水温过高”和“冷却系统异常”在语义空间里更接近。"] },
+      { heading: "向量检索流程", bullets: ["文档切分成 chunk。", "每个 chunk 生成 embedding。", "用户问题也生成 embedding。", "用 cosine similarity 等方法找相似片段。", "把片段交给 LLM 生成答案。"] },
+      { heading: "局限", bullets: ["语义相似不等于事实正确。", "向量库不生成答案。", "embedding 模型选择会影响检索质量。"] }
+    ],
+    decision: "看到 cosine similarity、vector database、semantic search，优先想到 embedding 和检索。"
+  },
+  rag: {
+    title: "RAG 检索增强生成",
+    overview: "RAG 通过检索外部知识增强 LLM，不改变模型参数，适合企业知识库、最新资料和需要引用来源的场景。",
+    sections: [
+      { heading: "完整链路", bullets: ["文档清洗", "chunk 切分", "embedding", "写入向量库", "query 检索", "rerank", "prompt 注入", "LLM 生成", "引用与评估"] },
+      { heading: "为什么能降低幻觉", paragraphs: ["LLM 不再只依赖训练中记住的通用知识，而是基于检索到的企业资料回答。但如果检索错了或 prompt 没有限制，仍可能幻觉。"] },
+      { heading: "RAG vs Fine-tuning", table: [["维度", "RAG", "Fine-tuning"], ["是否改参数", "否", "是"], ["适合", "知识更新、引用来源", "固定任务、固定风格"], ["成本", "较低，更新索引", "较高，需训练"], ["风险", "检索质量", "训练数据和遗忘"]] }
+    ],
+    decision: "题干出现内部知识库、最新信息、引用来源、避免重训，优先选 RAG。"
+  },
+  prompt: {
+    title: "Prompt Engineering",
+    overview: "Prompt 是控制模型行为的输入设计。它解决格式、约束、角色和示例问题，但不能替代知识库、安全系统或权限控制。",
+    sections: [
+      { heading: "高质量 prompt 结构", bullets: ["角色：你是谁。", "任务：要完成什么。", "上下文：基于哪些资料。", "约束：不能做什么，必须做什么。", "输出格式：JSON、表格或字段。"] },
+      { heading: "Zero-shot 与 Few-shot", paragraphs: ["Zero-shot 适合通用简单任务；few-shot 通过示例让模型模仿格式、风格或评分标准。示例质量比数量更重要。"] },
+      { heading: "边界", bullets: ["不能靠 prompt 保证隐私。", "不能靠 prompt 获得最新企业知识。", "不能靠 prompt 完全消除幻觉。"] }
+    ],
+    decision: "题干问输出格式、示例、角色、约束，通常是 prompt engineering；问企业知识，通常是 RAG。"
+  },
+  finetune: {
+    title: "Fine-tuning / LoRA / RLHF",
+    overview: "这组概念都和模型适配有关，但解决的问题不同：fine-tuning 改任务能力，LoRA 降低微调成本，RLHF 做偏好对齐。",
+    sections: [
+      { heading: "Fine-tuning", paragraphs: ["在预训练模型基础上继续用任务数据训练，适合固定任务、固定格式或领域表达。"] },
+      { heading: "LoRA", paragraphs: ["冻结大模型大部分参数，只训练小型低秩适配矩阵，降低训练和存储成本。"] },
+      { heading: "RLHF", paragraphs: ["用人类偏好训练 reward model，再优化模型输出，使回答更符合人类偏好和安全要求。"] },
+      { heading: "选择框架", bullets: ["知识经常变：RAG。", "输出风格固定：LoRA/fine-tuning。", "人类偏好和安全：RLHF。"] }
+    ],
+    decision: "LoRA 不是检索；RLHF 不是事实数据库；fine-tuning 不适合频繁更新的知识。"
+  },
+  metrics: {
+    title: "指标与评估",
+    overview: "指标题考的是任务匹配：不同任务必须用不同指标，且要知道指标不能证明什么。",
+    sections: [
+      { heading: "分类指标", bullets: ["Precision：预测为正的有多少是真的。", "Recall：真实正例找回多少。", "F1：precision 和 recall 的平衡。"] },
+      { heading: "回归指标", bullets: ["MAE：平均绝对误差，直观。", "RMSE：对大误差更敏感。", "R2：解释方差比例。"] },
+      { heading: "NLP 与 RAG 指标", bullets: ["BLEU：翻译。", "ROUGE：摘要。", "Perplexity：语言模型不确定性。", "Recall@k/MRR/nDCG：检索排序。", "Faithfulness：回答是否忠实于上下文。"] }
+    ],
+    decision: "类别不平衡别只看 accuracy；BLEU/ROUGE 高不等于事实正确；RAG 要同时看检索和生成。"
+  },
+  experiment: {
+    title: "实验设计",
+    overview: "实验设计让你能公平比较模型、prompt、RAG 配置或系统版本。",
+    sections: [
+      { heading: "Baseline", paragraphs: ["Baseline 是比较参照，没有 baseline 就无法证明新方案更好。"] },
+      { heading: "A/B Test", paragraphs: ["只改变一个关键变量，保持测试集、模型版本、评分标准和生成参数一致。"] },
+      { heading: "常见错误", bullets: ["一次输出就下结论。", "同时改变 prompt 和模型。", "测试集参与调参。", "只看平均分不看分群表现。"] }
+    ],
+    decision: "看到比较题，先问：baseline 是什么？变量是否唯一？指标是否匹配任务？"
+  },
+  software: {
+    title: "LLM 应用开发",
+    overview: "软件开发题考应用架构：模型只是系统的一部分，还要考虑 API、检索、权限、监控和部署。",
+    sections: [
+      { heading: "典型架构", bullets: ["前端", "后端 API", "模型服务", "向量数据库", "业务数据库", "日志", "权限", "监控"] },
+      { heading: "性能概念", bullets: ["Latency：单次响应时间。", "Throughput：单位时间处理能力。", "Batch：提高吞吐但可能增加等待。", "Streaming：改善感知响应。"] },
+      { heading: "工程风险", bullets: ["没有版本管理无法复盘。", "没有日志无法定位问题。", "没有权限控制会泄露数据。"] }
+    ],
+    decision: "架构题不要只想模型，先画数据流和权限边界。"
+  },
+  nvidia: {
+    title: "NVIDIA 工具栈",
+    overview: "NVIDIA 工具题是生命周期匹配题：训练、部署、服务、优化、数据科学、多 GPU 各有工具。",
+    sections: [
+      { heading: "工具速查", table: [["场景", "工具"], ["训练/微调/定制 LLM", "NeMo"], ["推理微服务", "NIM"], ["多框架模型服务", "Triton"], ["推理优化", "TensorRT/TensorRT-LLM"], ["GPU 数据科学", "RAPIDS"], ["GPU 编程基础", "CUDA"], ["多 GPU 通信", "NCCL"], ["GPU 分区隔离", "MIG"]] },
+      { heading: "易混点", bullets: ["TensorRT 不是训练框架。", "Triton 不是数据分析库。", "NIM 和 NeMo 定位不同。"] }
+    ],
+    decision: "先判断题目发生在生命周期哪一步，再选工具。"
+  },
+  data: {
+    title: "数据分析",
+    overview: "数据分析保证模型和实验建立在可信数据上，包括 EDA、清洗、可视化和漂移检查。",
+    sections: [
+      { heading: "EDA 检查", bullets: ["分布", "缺失值", "异常值", "类别平衡", "相关性", "时间漂移"] },
+      { heading: "清洗风险", paragraphs: ["清洗不能让测试信息泄漏进训练流程；时间序列和设备级数据尤其要注意分组切分。"] },
+      { heading: "RAPIDS", paragraphs: ["RAPIDS 用 GPU 加速数据科学流程，cuDF 类似 pandas，cuML 类似 scikit-learn。"] }
+    ],
+    decision: "先理解数据，再训练模型；EDA 不是装饰，是发现风险。"
+  },
+  trust: {
+    title: "可信 AI",
+    overview: "可信 AI 关注可靠、公平、合规、安全和可解释。考试常给高风险业务场景让你选缓解措施。",
+    sections: [
+      { heading: "主要风险", bullets: ["隐私泄露", "未授权数据使用", "偏见", "幻觉", "prompt injection", "不可解释", "上线漂移"] },
+      { heading: "缓解措施", bullets: ["数据最小化", "匿名化", "访问控制", "审计日志", "RAG 与引用", "人工审核", "分群评估", "监控告警"] },
+      { heading: "判断原则", paragraphs: ["风险和措施要匹配：隐私用权限和匿名化；幻觉用 RAG、引用和校验；偏见用数据代表性和分群评估；安全用过滤、隔离和审计。"] }
+    ],
+    decision: "不要选绝对化答案，例如“完全消除幻觉”或“只要模型更大就更公平”。"
+  }
+};
+
 const weeks = [
   ["考试范围与 ML 基础", ["ml", "ml", "ml", "metrics", "ml", "metrics", "ml"]],
   ["Transformer 与 Embedding", ["transformer", "transformer", "transformer", "transformer", "embedding", "transformer", "transformer"]],
@@ -1046,6 +1217,37 @@ function renderLessonList() {
   }).join("");
 }
 
+function renderDeepKnowledge(conceptId) {
+  const module = deepKnowledge[conceptId];
+  if (!module) return "";
+  const renderSection = (section) => `
+    <section class="deep-section">
+      <h4>${section.heading}</h4>
+      ${(section.paragraphs || []).map((item) => `<p>${item}</p>`).join("")}
+      ${section.bullets ? `<ul>${section.bullets.map((item) => `<li>${item}</li>`).join("")}</ul>` : ""}
+      ${section.table ? `
+        <div class="deep-table-wrap">
+          <table class="deep-table">
+            <tbody>
+              ${section.table.map((row, rowIndex) => `
+                <tr>${row.map((cell) => rowIndex === 0 ? `<th>${cell}</th>` : `<td>${cell}</td>`).join("")}</tr>
+              `).join("")}
+            </tbody>
+          </table>
+        </div>
+      ` : ""}
+    </section>
+  `;
+  return `
+    <section class="lesson-section deep-knowledge">
+      <h3>专业讲义：${module.title}</h3>
+      <p class="deep-overview">${module.overview}</p>
+      ${module.sections.map(renderSection).join("")}
+      <div class="decision-box"><strong>考试判断框架</strong><p>${module.decision}</p></div>
+    </section>
+  `;
+}
+
 function renderLessonPanel() {
   const lesson = lessons.find((item) => item.id === selectedLessonId()) || lessons[0];
   const done = completedSet();
@@ -1064,6 +1266,7 @@ function renderLessonPanel() {
       <h3>课程讲解</h3>
       <ul>${detail.lecture.map((item) => `<li>${item}</li>`).join("")}</ul>
     </section>
+    ${renderDeepKnowledge(lesson.conceptId)}
     <section class="lesson-section lesson-example">
       <h3>汽车行业例子</h3>
       <p>${detail.example}</p>
@@ -1117,6 +1320,7 @@ function renderConceptArticle(id) {
     <p class="eyebrow">${c.domain}</p>
     <h1>${c.label}</h1>
     <p class="concept-lead">${c.definition}</p>
+    ${renderDeepKnowledge(id)}
     <section class="concept-section"><h3>系统讲解</h3><ul>${c.learn.map((item) => `<li>${item}</li>`).join("")}</ul></section>
     <section class="concept-section"><h3>考试问法</h3><ul>${c.exam.map((item) => `<li>${item}</li>`).join("")}</ul></section>
     <section class="concept-section"><h3>易错点</h3><ul>${c.traps.map((item) => `<li>${item}</li>`).join("")}</ul></section>
